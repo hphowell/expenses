@@ -44,11 +44,19 @@ def importFromCSV(path, table):
         lineNumber += 1
     file.close()
 
-    for row in c.execute('select * from chase'):
-        print(row)
-
     #commit database changes
     conn.commit()
     #close database connection
     conn.close()
 
+def allTransactions():
+    import sqlite3
+    # create connection to database
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+
+    #loop through rows in table to return all transactions
+    for row in c.execute('select * from chase'):
+        print(row)
+
+    conn.close()
