@@ -10,8 +10,10 @@ def importFromCSV(path, table):
     #put query results in maxID
     for line in result:
         maxID = line
-
-    startIndex = maxID[0] + 1
+    if maxID[0] == None:
+        startIndex = 1
+    else:
+        startIndex = maxID[0] + 1
 
     lineNumber = 0
     rowID = startIndex
@@ -50,7 +52,3 @@ def importFromCSV(path, table):
     #close database connection
     conn.close()
 
-def main():
-    importFromCSV('test.CSV', 'chase')
-
-main()
