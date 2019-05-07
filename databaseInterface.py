@@ -44,7 +44,9 @@ def importFromCSV(path, table):
 
     for row in c.execute('select * from chase'):
         print(row)
-        
+
+    #commit database changes
+    conn.commit()
     #close database connection
     conn.close()
 
