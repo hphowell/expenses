@@ -67,19 +67,24 @@ def calculateSavings(salary):
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
 
+    #pull out the latest transaction date
     for row in c.execute('select max(transDate) from chase'):
         maxDate = row[0]
 
+    #determine the month and year of latest transaction date
     maxMonth = int(maxDate[:2])
     maxYear = int(maxDate[6:])
 
+    #pull out the earliest transaction date
     for row in c.execute('select min(transDate) from chase'):
         minDate = row[0]
 
+    # determine the month and year of earliest transaction date
     minMonth = int(minDate[:2])
     minYear = int(minDate[6:])
 
     months = 0
+    #count number of months for which there is data
     for i in range(minYear, maxYear + 1):
         for j in range(minMonth, maxMonth + 1):
             #will use later when implementing only pulling full months
@@ -87,10 +92,15 @@ def calculateSavings(salary):
                 #j = '0' + str(j)
             months += 1
 
-
+    #sum up total expenses
     for row in c.execute('select sum(amount) from chase'):
         totalExpenses = row[0]
+    #calculate average expenses per month
     averageExpenses = totalExpenses / months
+
+    #close database connection
     conn.close()
+
+    #calculate and return savings
     savings = salary - averageExpenses
     return savings
