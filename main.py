@@ -1,3 +1,10 @@
+'''
+Author: Hayden Howell
+
+This tool allows the user to view transactions from their bank statements (imported from CSV files) and calculate their
+average monthly savings.
+'''
+
 import databaseInterface
 
 def main():
@@ -5,7 +12,8 @@ def main():
     while userInput != 3:
         userInput = int(input('Select an option:\n1) View transactions\n2) Monthly savings approximation\n3) Quit\n'))
         if userInput == 1:
-            databaseInterface.allTransactions()
+            databaseInterface.allTransactions('data.db', ['chase'])
+            print('\n')
         elif userInput == 2:
             print(savings())
         elif userInput == 3:
@@ -28,7 +36,7 @@ def savings():
             elif salaryChoice == 3:
                 salary = salary * 26 / 12
 
-            monthlySavings = str(round(databaseInterface.calculateSavings(salary), 2))
+            monthlySavings = str(round(databaseInterface.calculateSavings('data.db', salary), 2))
             savingsString = 'Your average monthly savings after all expenses is $' + monthlySavings
             return savingsString
 

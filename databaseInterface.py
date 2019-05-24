@@ -1,11 +1,11 @@
-def importFromCSV(path, table):
+def importFromCSV(csvPath, datbasePath, table):
     import sqlite3
     #create connection to database
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(datbasePath)
     c = conn.cursor()
 
-    #query database to find highest primary key
-    result = c.execute('select max(ID) from chase')
+    #query database to find highest existing primary key
+    result = c.execute('select max(ID) from ' & table)
 
     #put query results in maxID
     for line in result:
@@ -19,7 +19,7 @@ def importFromCSV(path, table):
     rowID = startIndex
 
     #open the CSV file
-    file = open(path, 'r')
+    file = open(csvPath, 'r')
 
     #loop through the lines in the file
     for line in file:
@@ -49,22 +49,23 @@ def importFromCSV(path, table):
     #close database connection
     conn.close()
 
-def allTransactions():
+def allTransactions(databasePath, tables):
     import sqlite3
     # create connection to database
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(databasePath)
     c = conn.cursor()
 
-    #loop through rows in table to return all transactions
-    for row in c.execute('select * from chase'):
-        print(row)
+    for table in tables:
+        #loop through rows in table to return all transactions
+        for row in c.execute('select * from ' + table):
+            print(row)
 
-    conn.close()
+        conn.close()
 
-def calculateSavings(salary):
+def calculateSavings(databasePath, salary):
     import sqlite3
     # create connection to database
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect(databasePath)
     c = conn.cursor()
 
     #pull out the latest transaction date
@@ -87,7 +88,7 @@ def calculateSavings(salary):
     #count number of months for which there is data
     for i in range(minYear, maxYear + 1):
         for j in range(minMonth, maxMonth + 1):
-            #will use later when implementing only pulling full months
+            #TODO will use later when implementing only pulling full months
             #if len(str(j)) == 1:
                 #j = '0' + str(j)
             months += 1
