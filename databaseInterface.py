@@ -5,7 +5,7 @@ def importFromCSV(csvPath, datbasePath, table):
     c = conn.cursor()
 
     #query database to find highest existing primary key
-    result = c.execute('select max(ID) from ' & table)
+    result = c.execute('select max(ID) from ' + table)
 
     #put query results in maxID
     for line in result:
@@ -45,7 +45,7 @@ def importFromCSV(csvPath, datbasePath, table):
     file.close()
 
     #commit database changes
-    conn.commit()
+    #conn.commit()
     #close database connection
     conn.close()
 

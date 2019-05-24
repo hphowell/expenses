@@ -6,17 +6,20 @@ average monthly savings.
 '''
 
 import databaseInterface
+import sqlite3
 
 def main():
     userInput = 0
-    while userInput != 3:
-        userInput = int(input('Select an option:\n1) View transactions\n2) Monthly savings approximation\n3) Quit\n'))
+    while userInput != 4:
+        userInput = int(input('Select an option:\n1) View transactions\n2) Monthly savings approximation\n3) Import CSV\n4) Quit\n'))
         if userInput == 1:
             databaseInterface.allTransactions('data.db', ['chase'])
             print('\n')
         elif userInput == 2:
             print(savings())
         elif userInput == 3:
+            importCSVInputs()
+        elif userInput == 4:
             print('Exiting')
         else:
             print('Input a valid number.\n')
@@ -39,6 +42,31 @@ def savings():
             monthlySavings = str(round(databaseInterface.calculateSavings('data.db', salary), 2))
             savingsString = 'Your average monthly savings after all expenses is $' + monthlySavings
             return savingsString
+
+def importCSVInputs():
+    import os
+
+    csvPath = input('Please enter the path of the CSV file that you would like to import: ')
+    exists = os.path.isfile(csvPath)
+    while not (exists and (csvPath[-4:] == '.csv')):
+        csvPath = input('Please input a valid path ending with ".csv": ')
+        exists = os.path.isfile(csvPath)
+    table = input('Please enter the table into which you would like to import the CSV file: ')
+    tables = []
+    while not tables:
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute('SELECT name from sqlite_master WHERE type = "table" AND name = "' + table + '";')
+        tables = c.fetchall()
+        conn.close()
+        if not tables:
+            table = input(
+                'The table does not exist. Please enter an existing table or press return to return to the menu: ')
+            if table == '':
+                break
+    if tables:
+        databaseInterface.importFromCSV(csvPath, 'data.db', table)
+        print('Import succeeded')
 
 
 if __name__ == '__main__':
